@@ -15,8 +15,6 @@ public class CitiesGameUI {
             frame.setVisible(true);
         });
 
-        JsonCityReader reader = new JsonCityReader();
-        reader.read();
     }
 }
 

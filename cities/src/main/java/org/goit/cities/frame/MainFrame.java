@@ -1,5 +1,7 @@
 package org.goit.cities.frame;
 
+import org.goit.cities.processor.Game;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,9 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 GameFrame second = new GameFrame();
                 second.setVisible(true);
+                Game game = Game.initGame();
+                second.acceptGame(game);
+                openButton.setEnabled(false);//todo enabled after close second window
             }
         });
 //        panel.setLayout(new GridLayout(1, 2));

@@ -1,16 +1,23 @@
 package org.goit.cities.frame;
 
+import org.goit.cities.processor.Game;
+import org.goit.cities.processor.Gamiable;
+import org.goit.cities.processor.WordFinder;
+import org.goit.cities.reader.JsonCityReader;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements Gamiable {
 
     public static final String COMPUTER_LABEL = "Комп'ютер";
     public static final String NEXT_STEP = "Зробити хід";
     public static final String ENTER_CITY_NAME = "Введіть назву міста";
+
+    private Game game;
 
     public GameFrame() {
         setTitle("Міста");
@@ -18,15 +25,12 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        WordFinder wordFinder = new WordFinder();
+
         JTextField field = new JTextField(20);
+        field.setBackground(Color.WHITE);
 
         JLabel label = new JLabel(ENTER_CITY_NAME);
-
-//        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-//        topPanel.add(field, BorderLayout.CENTER);
-//        topPanel.add(label, BorderLayout.EAST);
-
-//        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         JLabel computerLabel = new JLabel(COMPUTER_LABEL);
 
@@ -34,12 +38,21 @@ public class GameFrame extends JFrame {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                GameFrame second = new GameFrame();
-//                second.setVisible(true);
+                String enteredValue = field.getText();
+                if(!wordFinder.checkWord(enteredValue, game))
+                    field.setBackground(Color.RED);
+                else{
+                    field.setBackground(Color.WHITE);
+                    game.caclulateStep(enteredValue);
+                    field.setText("");
+                    if(!game.getPlayers().get(game.getCurrentPlayerIndex()).getHuman()){
+                        String newWord = wordFinder.findNext(enteredValue, game);
+                        computerLabel.setText(COMPUTER_LABEL + " : " + newWord);
+                        game.caclulateStep(newWord);
+                    }
+                }
             }
         });
-//        bottomPanel.add(nextButton, BorderLayout.CENTER);
-//        bottomPanel.add(computerLabel, BorderLayout.EAST);
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -63,11 +76,12 @@ public class GameFrame extends JFrame {
         gbc.weightx = 1; gbc.weighty = 1;
         mainPanel.add(computerLabel, gbc);
 
-//        mainPanel.add(topPanel);
-//        mainPanel.add(Box.createRigidArea(new Dimension(0, 1)));
-//        mainPanel.add(bottomPanel);
 
         add(mainPanel);
     }
 
+    @Override
+    public void acceptGame(Game game) {
+        this.game = game;
+    }
 }
