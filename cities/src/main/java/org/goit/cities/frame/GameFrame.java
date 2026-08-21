@@ -2,6 +2,7 @@ package org.goit.cities.frame;
 
 import org.goit.cities.processor.Game;
 import org.goit.cities.processor.Gamiable;
+import org.goit.cities.processor.Player;
 import org.goit.cities.processor.WordFinder;
 import org.goit.cities.reader.JsonCityReader;
 
@@ -16,6 +17,11 @@ public class GameFrame extends JFrame implements Gamiable {
     public static final String COMPUTER_LABEL = "Комп'ютер";
     public static final String NEXT_STEP = "Зробити хід";
     public static final String ENTER_CITY_NAME = "Введіть назву міста";
+    public static final String END_GAME_MODAL_TITLE = "Зра завершена";
+    public static final String END_GAME_INFO_LABEL = "";
+    public static final String BUTTON_CLOSE = "Закрити";
+
+    public static final String END_WORD = "здаюсь";
 
     private Game game;
 
@@ -39,6 +45,7 @@ public class GameFrame extends JFrame implements Gamiable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String enteredValue = field.getText();
+                if(END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  showFinishDialog(GameFrame.this, game, false);
                 if(!wordFinder.checkWord(enteredValue, game))
                     field.setBackground(Color.RED);
                 else{
@@ -47,6 +54,7 @@ public class GameFrame extends JFrame implements Gamiable {
                     field.setText("");
                     if(!game.getPlayers().get(game.getCurrentPlayerIndex()).getHuman()){
                         String newWord = wordFinder.findNext(enteredValue, game);
+                        if(newWord == null)  showFinishDialog(GameFrame.this, game, true);
                         computerLabel.setText(COMPUTER_LABEL + " : " + newWord);
                         game.caclulateStep(newWord);
                     }
@@ -84,4 +92,44 @@ public class GameFrame extends JFrame implements Gamiable {
     public void acceptGame(Game game) {
         this.game = game;
     }
+
+    private static void showFinishDialog(JFrame parent, Game game, boolean human) {
+        JDialog dialog = new JDialog(parent, END_GAME_MODAL_TITLE, true);
+        dialog.setSize(250, 150);
+        dialog.setLocationRelativeTo(parent);
+        dialog.setLayout(new FlowLayout());
+
+        StringBuffer buf = new StringBuffer();
+        game.getPlayers().stream()
+                .filter(Player::getHuman)
+                .forEach(player -> buf.append("Гравець зробив " + player.getCount() + " шагів \n"));
+        StringBuffer compbuf = new StringBuffer();
+        game.getPlayers().stream()
+                .filter(pl -> !pl.getHuman())
+                .forEach(player -> compbuf.append("Компьютер зробив " + player.getCount() + "шагів \n"));
+
+        JLabel label1 = new JLabel("Зра завершена.");
+        JLabel label2 = new JLabel(
+                buf.toString()
+        );
+        JLabel label3 = new JLabel(
+                compbuf.toString()
+        );
+        JLabel label4 = new JLabel(
+                "Переміг " + (human? "Гравець": "Комп'ютер")
+        );
+        JButton closeButton = new JButton(BUTTON_CLOSE);
+        closeButton.addActionListener(e -> {
+            dialog.dispose();
+            parent.dispose();
+        });
+
+        dialog.add(label1);
+        dialog.add(label2);
+        dialog.add(label3);
+        dialog.add(label4);
+        dialog.add(closeButton);
+        dialog.setVisible(true);
+    }
+
 }

@@ -73,7 +73,7 @@ public class Game {
         Player currentPlayer = getPlayers().get(currentPlayerIndex);
 
         Integer count = currentPlayer.getCount();
-        currentPlayer.setCount(count++);
+        currentPlayer.setCount(++count);
         setPrevWord(newWord);
 
         if(currentPlayerIndex < getPlayers().size() - 1)
@@ -108,7 +108,7 @@ public class Game {
         game.setPlayers(List.of(
                 player,
                 new Player(0, false)
-        ));// todo move initialization of players
+        ));//  move initialization of players
         game.setCurrentPlayerIndex(0);
         return game;
     }

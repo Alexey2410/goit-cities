@@ -13,7 +13,7 @@ public class JsonCityReader {
 
     public static final String FILE_NAME = "cities_ukraine.json";
 
-    public List<City> read(){
+    public List<City> read(){//default reader
         Gson gson = new Gson();
 
         List<City> cities = new ArrayList<>();

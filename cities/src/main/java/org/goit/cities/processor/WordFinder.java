@@ -14,7 +14,7 @@ public class WordFinder {
 
         //check first letter is equal with last letter prev word
         if(game.getPrevWord() != null)
-            if(lastchar != null && currentWord.charAt(0) != lastchar) return false;
+            if(lastchar != null && currentWord.toLowerCase().charAt(0) != lastchar) return false;
 
         //check does current word in base
         Optional<City> anycity = game.getAllowedCites().stream()
@@ -43,7 +43,7 @@ public class WordFinder {
         String anycity = null;
 
         for (City city: game.getAllowedCites()){
-            if(city.getName().charAt(0) == lastchar)
+            if(city.getName().toLowerCase().charAt(0) == lastchar)
                 if(!game.getUsedCites().contains(city)){
                     anycity = city.getName();
                     game.getUsedCites().add(city);
@@ -58,10 +58,10 @@ public class WordFinder {
     private static Character getLastCharacter(String currentWord) {
         if(StringUtils.isEmpty(currentWord)) return null;
 
-        char lastchar =  currentWord.charAt(currentWord.length()-1);
-        if(lastchar == 'ь') {
+        char lastchar =  currentWord.toLowerCase().charAt(currentWord.length()-1);
+        if(lastchar == 'ь' || lastchar == 'и') {// exclude 'ь' and 'и' letters from search new city
             if (currentWord.length() == 1) return null;
-            lastchar =  currentWord.charAt(currentWord.length()-2);
+            lastchar =  currentWord.toLowerCase().charAt(currentWord.length()-2);
         }
         return lastchar;
     }
