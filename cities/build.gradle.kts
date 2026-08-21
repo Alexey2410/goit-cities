@@ -1,5 +1,10 @@
 plugins {
     id("java")
+    id ("application")
+}
+
+application {
+    mainClass.set("org.goit.cities.CitiesGameUI")
 }
 
 group = "org.goit"
@@ -21,4 +26,14 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "org.goit.cities.CitiesGameUI"
+    }
+
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
 }
