@@ -27,7 +27,8 @@ public class WordFinder {
             Optional<City> usedCity = game.getUsedCites().stream()
                     .filter(city -> city.getName().equals(currentWord))
                     .findAny();
-
+            if(usedCity.isEmpty())
+                game.getUsedCites().add(anycity.get());
             return usedCity.isEmpty();// ok if word exist and not used
         }
 

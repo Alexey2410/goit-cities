@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
                 second.setVisible(true);
                 Game game = Game.initGame();
                 second.acceptGame(game);
-                openButton.setEnabled(false);//todo enabled after close second window
+//                openButton.setEnabled(false);//todo enabled after close second window
             }
         });
 //        panel.setLayout(new GridLayout(1, 2));
