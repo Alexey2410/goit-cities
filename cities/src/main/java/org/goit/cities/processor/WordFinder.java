@@ -10,6 +10,7 @@ public class WordFinder {
 
 
     public boolean checkWord(String currentWord, Game game){
+        if(StringUtils.isEmpty(currentWord)) return false;
         Character lastchar = getLastCharacter(game.getPrevWord());
 
         //check first letter is equal with last letter prev word
@@ -18,14 +19,14 @@ public class WordFinder {
 
         //check does current word in base
         Optional<City> anycity = game.getAllowedCites().stream()
-                .filter(city -> city.getName().equals(currentWord))
+                .filter(city -> city.getName().toLowerCase().equals(currentWord.toLowerCase()))
                 .findAny();
 
 
         if(anycity.isPresent()){
         // check if word already used
             Optional<City> usedCity = game.getUsedCites().stream()
-                    .filter(city -> city.getName().equals(currentWord))
+                    .filter(city -> city.getName().toLowerCase().equals(currentWord.toLowerCase()))
                     .findAny();
             if(usedCity.isEmpty())
                 game.getUsedCites().add(anycity.get());
@@ -56,13 +57,13 @@ public class WordFinder {
         return anycity;
     }
 
-    private static Character getLastCharacter(String currentWord) {
-        if(StringUtils.isEmpty(currentWord)) return null;
+    private static Character getLastCharacter(String word) {
+        if(StringUtils.isEmpty(word)) return null;
 
-        char lastchar =  currentWord.toLowerCase().charAt(currentWord.length()-1);
+        char lastchar =  word.toLowerCase().charAt(word.length()-1);
         if(lastchar == 'ь' || lastchar == 'и') {// exclude 'ь' and 'и' letters from search new city
-            if (currentWord.length() == 1) return null;
-            lastchar =  currentWord.toLowerCase().charAt(currentWord.length()-2);
+            if (word.length() == 1) return null;
+            lastchar =  word.toLowerCase().charAt(word.length()-2);
         }
         return lastchar;
     }
