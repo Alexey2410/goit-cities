@@ -28,6 +28,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.named<Jar>("jar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 tasks.jar {
     manifest {
         attributes["Main-Class"] = "org.goit.cities.CitiesGameUI"

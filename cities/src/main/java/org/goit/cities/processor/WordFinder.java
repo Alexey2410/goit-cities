@@ -24,14 +24,14 @@ public class WordFinder {
 
         //check does current word in base
         Optional<City> anycity = game.getAllowedCites().stream()
-                .filter(city -> city.getName().toLowerCase().equals(currentWord.toLowerCase()))
+                .filter(city -> city.getName().toLowerCase().equals(currentWord.replaceAll("'","’").toLowerCase()))
                 .findAny();
 
 
         if(anycity.isPresent()){
         // check if word already used
             Optional<City> usedCity = game.getUsedCites().stream()
-                    .filter(city -> city.getName().toLowerCase().equals(currentWord.toLowerCase()))
+                    .filter(city -> city.getName().toLowerCase().equals(currentWord.replaceAll("'","’").toLowerCase()))
                     .findAny();
             if(usedCity.isEmpty())
                 game.getUsedCites().add(anycity.get());
