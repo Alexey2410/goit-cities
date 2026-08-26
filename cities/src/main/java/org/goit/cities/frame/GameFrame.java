@@ -2,10 +2,8 @@ package org.goit.cities.frame;
 
 import org.apache.commons.lang3.StringUtils;
 import org.goit.cities.processor.Game;
-import org.goit.cities.processor.Gamiable;
 import org.goit.cities.processor.Player;
 import org.goit.cities.processor.WordFinder;
-import org.goit.cities.reader.JsonCityReader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-public class GameFrame extends JFrame implements Gamiable {
+public class GameFrame extends JFrame {
 
     public static final String COMPUTER_LABEL = "Комп'ютер";
     public static final String NEXT_STEP = "Зробити хід";
@@ -27,14 +25,18 @@ public class GameFrame extends JFrame implements Gamiable {
     public static final String END_WORD = "здаюсь";
 
     private Game game;
+    private WordFinder wordFinder;
 
-    public GameFrame() {
+
+    public GameFrame(Game game, WordFinder wordFinder) {
+
+        this.game = game;
+        this.wordFinder = wordFinder;
+
         setTitle("Міста");
         setSize(400, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        WordFinder wordFinder = new WordFinder();
 
         JTextField field = new JTextField(20);
         field.setBackground(Color.WHITE);
@@ -48,16 +50,16 @@ public class GameFrame extends JFrame implements Gamiable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String enteredValue = field.getText();
-                if(StringUtils.isNotEmpty(enteredValue) && END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  { showFinishDialog(GameFrame.this, game, false); return;}
-                if(!wordFinder.checkWord(enteredValue, game))
+                if(StringUtils.isNotEmpty(enteredValue) && END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  { showFinishDialog(GameFrame.this, false); return;}
+                if(!wordFinder.checkWord(enteredValue))
                     field.setBackground(Color.RED);
                 else{
                     field.setBackground(Color.WHITE);
                     game.caclulateStep(enteredValue);
                     field.setText("");
                     if(!game.getPlayers().get(game.getCurrentPlayerIndex()).getHuman()){
-                        String newWord = wordFinder.findNext(enteredValue, game);
-                        if(newWord == null){ showFinishDialog(GameFrame.this, game, true); return;}
+                        String newWord = wordFinder.findNext(enteredValue);
+                        if(newWord == null){ showFinishDialog(GameFrame.this, true); return;}
                         computerLabel.setText(COMPUTER_LABEL + " : " + newWord);
                         game.caclulateStep(newWord);
                     }
@@ -91,12 +93,7 @@ public class GameFrame extends JFrame implements Gamiable {
         add(mainPanel);
     }
 
-    @Override
-    public void acceptGame(Game game) {
-        this.game = game;
-    }
-
-    private static void showFinishDialog(JFrame parent, Game game, boolean human) {
+    private void showFinishDialog(JFrame parent, boolean human) {
         JDialog dialog = new JDialog(parent, END_GAME_MODAL_TITLE, true);
         dialog.setSize(200, 200);
         dialog.setLocationRelativeTo(parent);
@@ -144,4 +141,7 @@ public class GameFrame extends JFrame implements Gamiable {
         dialog.setVisible(true);
     }
 
+    public Game getGame() {
+        return game;
+    }
 }

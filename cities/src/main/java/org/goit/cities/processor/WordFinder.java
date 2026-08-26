@@ -8,8 +8,13 @@ import java.util.Optional;
 
 public class WordFinder {
 
+    private Game game;
 
-    public boolean checkWord(String currentWord, Game game){
+    public WordFinder(Game game) {
+        this.game = game;
+    }
+
+    public boolean checkWord(String currentWord){
         if(StringUtils.isEmpty(currentWord)) return false;
         Character lastchar = getLastCharacter(game.getPrevWord());
 
@@ -37,7 +42,7 @@ public class WordFinder {
     }
 
 
-    public String findNext(String currentWord, Game game){
+    public String findNext(String currentWord){
         Character lastchar = getLastCharacter(currentWord);
         if (lastchar == null) return null;
 

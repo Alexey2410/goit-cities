@@ -4,6 +4,7 @@ import org.goit.cities.model.City;
 import org.goit.cities.reader.JsonCityReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,13 @@ public class Game {
 
     private String prevWord;
 
-    public Game() {
+    private JsonCityReader reader;
+
+    public Game(JsonCityReader reader) {
         this.allowedCites = new ArrayList<>();
         this.usedCites = new ArrayList<>();
         this.players = new ArrayList<>();
+        this.reader = reader;
     }
 
     public Game(List<City> allowedCites, List<City> usedCites, List<Player> players) {
@@ -82,34 +86,21 @@ public class Game {
             currentPlayerIndex = 0 ;
     }
 
-    public static Game initGame() {
-        Game game = new Game();
-        JsonCityReader reader = new JsonCityReader();
-        game.setAllowedCites(
-                reader.read(new File(JsonCityReader.FILE_NAME))
+    public Game initGame() throws IOException {
+        this.allowedCites = new ArrayList<>();
+        this.usedCites = new ArrayList<>();
+        this.players = new ArrayList<>();
+
+        setAllowedCites(
+                reader.read(new File(reader.getPath()))
         );
 
-        //case with only 3 cities in the list
-//        game.setAllowedCites(
-//                reader.read("[\n" +
-//                        "  {\n" +
-//                        "    \"name\": \"Бахчисарай\"\n" +
-//                        "  },\n" +
-//                        "  {\n" +
-//                        "    \"name\": \"Інкерман\"\n" +
-//                        "  },\n" +
-//                        "  {\n" +
-//                        "    \"name\": \"Білогірськ\"\n" +
-//                        "  }" +
-//                        "  ]" )
-//        );
-
         Player player = new Player(0, true);
-        game.setPlayers(List.of(
+        setPlayers(List.of(
                 player,
                 new Player(0, false)
         ));//  move initialization of players
-        game.setCurrentPlayerIndex(0);
-        return game;
+        setCurrentPlayerIndex(0);
+        return this;
     }
 }

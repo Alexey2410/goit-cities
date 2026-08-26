@@ -13,6 +13,12 @@ public class JsonCityReader {
 
     public static final String FILE_NAME = "cities_ukraine.json";
 
+    private String path;
+
+    public JsonCityReader(String path) {
+        this.path = path;
+    }
+
     public List<City> read(){//default reader
         Gson gson = new Gson();
 
@@ -28,17 +34,15 @@ public class JsonCityReader {
          return cities;
     }
 
-    public List<City> read(File jsonFile){
+    public List<City> read(File jsonFile) throws IOException {
 
         List<City> cities = new ArrayList<>();
 
-        try (FileReader reader = new FileReader(jsonFile)) {
+        FileReader reader = new FileReader(jsonFile);
 
             cities = getCities(reader);
 
-        } catch (IOException e) {
-            //e.printStackTrace();// ignore. use empty list
-        }
+        reader.close();
         return cities;
     }
 
@@ -59,4 +63,9 @@ public class JsonCityReader {
 
         return cities;
     }
+
+    public String getPath() {
+        return path;
+    }
+
 }

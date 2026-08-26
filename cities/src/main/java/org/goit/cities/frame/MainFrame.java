@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class MainFrame extends JFrame {
 
@@ -13,7 +16,18 @@ public class MainFrame extends JFrame {
     public static final String COMFIRMATION = "OK";
     public static final String MAIN_TILE = "Вітаємо";
 
-    public MainFrame(){
+    public static final String ERROR_LOAD_TILE = "Помилка загрузки";
+    public static final String INFO_MESSAGE = "Файл зі списком міст не знайдено або невірний формат.";
+    public static final String CLOSE_BUTTON = "Закрить";
+
+    private GameFrame gameFrame;
+
+    private Supplier<GameFrame> supplier;
+
+    public MainFrame(Supplier<GameFrame> supplier){
+
+        this.supplier = supplier;
+
         setTitle(MAIN_TILE);
         setSize(400, 100);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,10 +39,17 @@ public class MainFrame extends JFrame {
         openButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameFrame second = new GameFrame();
-                second.setVisible(true);
-                Game game = Game.initGame();
-                second.acceptGame(game);
+                gameFrame = (GameFrame) supplier.get();
+                try {
+                    gameFrame.getGame().initGame();
+
+                } catch (IOException ex) {
+                    showModal(MainFrame.this);
+                    openButton.setEnabled(false);
+                    return;
+                }
+                gameFrame.setVisible(true);
+
 //                openButton.setEnabled(false);//todo enabled after close second window
             }
         });
@@ -44,6 +65,21 @@ public class MainFrame extends JFrame {
 
 //        add(panel);
         add(topPanel);
+    }
+
+    private void showModal(JFrame parent) {
+        JDialog dialog = new JDialog(parent, ERROR_LOAD_TILE, true); // true = modal
+        dialog.setSize(350, 100);
+        dialog.setLocationRelativeTo(parent);
+        dialog.setLayout(new FlowLayout());
+
+        JLabel label = new JLabel(INFO_MESSAGE);
+        JButton closeButton = new JButton(CLOSE_BUTTON);
+        closeButton.addActionListener(e -> dialog.dispose());
+
+        dialog.add(label);
+        dialog.add(closeButton);
+        dialog.setVisible(true); // blocks input to parent until closed
     }
 
 }
