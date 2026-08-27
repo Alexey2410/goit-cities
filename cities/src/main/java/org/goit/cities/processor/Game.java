@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private List<City> allowedCites;
-    private List<City> usedCites;
+    private List<City> allowedCities;
+    private List<City> usedCities;
     private List<Player> players;
 
     private Integer currentPlayerIndex;
@@ -20,32 +20,32 @@ public class Game {
     private JsonCityReader reader;
 
     public Game(JsonCityReader reader) {
-        this.allowedCites = new ArrayList<>();
-        this.usedCites = new ArrayList<>();
+        this.allowedCities = new ArrayList<>();
+        this.usedCities = new ArrayList<>();
         this.players = new ArrayList<>();
         this.reader = reader;
     }
 
-    public Game(List<City> allowedCites, List<City> usedCites, List<Player> players) {
-        this.allowedCites = allowedCites;
-        this.usedCites = usedCites;
+    public Game(List<City> allowedCities, List<City> usedCities, List<Player> players) {
+        this.allowedCities = allowedCities;
+        this.usedCities = usedCities;
         this.players = players;
     }
 
-    public List<City> getAllowedCites() {
-        return allowedCites;
+    public List<City> getAllowedCities() {
+        return allowedCities;
     }
 
-    public void setAllowedCites(List<City> allowedCites) {
-        this.allowedCites = allowedCites;
+    public void setAllowedCities(List<City> allowedCities) {
+        this.allowedCities = allowedCities;
     }
 
-    public List<City> getUsedCites() {
-        return usedCites;
+    public List<City> getUsedCities() {
+        return usedCities;
     }
 
-    public void setUsedCites(List<City> usedCites) {
-        this.usedCites = usedCites;
+    public void setUsedCities(List<City> usedCities) {
+        this.usedCities = usedCities;
     }
 
     public List<Player> getPlayers() {
@@ -73,7 +73,7 @@ public class Game {
         this.currentPlayerIndex = currentPlayerIndex;
     }
 
-    public void caclulateStep(String newWord){
+    public void calculateStep(String newWord){
         Player currentPlayer = getPlayers().get(currentPlayerIndex);
 
         Integer count = currentPlayer.getCount();
@@ -87,11 +87,12 @@ public class Game {
     }
 
     public Game initGame() throws IOException {
-        this.allowedCites = new ArrayList<>();
-        this.usedCites = new ArrayList<>();
+        this.allowedCities = new ArrayList<>();
+        this.usedCities = new ArrayList<>();
         this.players = new ArrayList<>();
+        this.prevWord = null;
 
-        setAllowedCites(
+        setAllowedCities(
                 reader.read(new File(reader.getPath()))
         );
 

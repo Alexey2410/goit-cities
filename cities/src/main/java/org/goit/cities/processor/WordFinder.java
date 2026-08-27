@@ -23,18 +23,18 @@ public class WordFinder {
             if(lastchar != null && currentWord.toLowerCase().charAt(0) != lastchar) return false;
 
         //check does current word in base
-        Optional<City> anycity = game.getAllowedCites().stream()
+        Optional<City> anycity = game.getAllowedCities().stream()
                 .filter(city -> city.getName().toLowerCase().equals(currentWord.replaceAll("'","’").toLowerCase()))
                 .findAny();
 
 
         if(anycity.isPresent()){
         // check if word already used
-            Optional<City> usedCity = game.getUsedCites().stream()
+            Optional<City> usedCity = game.getUsedCities().stream()
                     .filter(city -> city.getName().toLowerCase().equals(currentWord.replaceAll("'","’").toLowerCase()))
                     .findAny();
             if(usedCity.isEmpty())
-                game.getUsedCites().add(anycity.get());
+                game.getUsedCities().add(anycity.get());
             return usedCity.isEmpty();// ok if word exist and not used
         }
 
@@ -49,11 +49,11 @@ public class WordFinder {
 
         String anycity = null;
 
-        for (City city: game.getAllowedCites()){
+        for (City city: game.getAllowedCities()){
             if(city.getName().toLowerCase().charAt(0) == lastchar)
-                if(!game.getUsedCites().contains(city)){
+                if(!game.getUsedCities().contains(city)){
                     anycity = city.getName();
-                    game.getUsedCites().add(city);
+                    game.getUsedCities().add(city);
                     break;
                 }
 

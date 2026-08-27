@@ -50,18 +50,18 @@ public class GameFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String enteredValue = field.getText();
-                if(StringUtils.isNotEmpty(enteredValue) && END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  { showFinishDialog(GameFrame.this, false); return;}
+                if(StringUtils.isNotBlank(enteredValue) && END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  { showFinishDialog(GameFrame.this, false); return;}
                 if(!wordFinder.checkWord(enteredValue))
                     field.setBackground(Color.RED);
                 else{
                     field.setBackground(Color.WHITE);
-                    game.caclulateStep(enteredValue);
+                    game.calculateStep(enteredValue);
                     field.setText("");
                     if(!game.getPlayers().get(game.getCurrentPlayerIndex()).getHuman()){
                         String newWord = wordFinder.findNext(enteredValue);
                         if(newWord == null){ showFinishDialog(GameFrame.this, true); return;}
                         computerLabel.setText(COMPUTER_LABEL + " : " + newWord);
-                        game.caclulateStep(newWord);
+                        game.calculateStep(newWord);
                     }
                 }
             }

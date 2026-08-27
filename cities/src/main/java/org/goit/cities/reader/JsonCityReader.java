@@ -19,21 +19,6 @@ public class JsonCityReader {
         this.path = path;
     }
 
-    public List<City> read(){//default reader
-        Gson gson = new Gson();
-
-        List<City> cities = new ArrayList<>();
-
-        try (FileReader reader = new FileReader(FILE_NAME)) {
-            Type typeOfT = TypeToken.getParameterized(List.class, City.class).getType();
-            cities = gson.fromJson(reader, typeOfT);
-
-        } catch (IOException e) {
-            //e.printStackTrace();// ignore. use empty list
-        }
-         return cities;
-    }
-
     public List<City> read(File jsonFile) throws IOException {
 
         List<City> cities = new ArrayList<>();

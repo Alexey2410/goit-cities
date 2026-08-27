@@ -7,9 +7,8 @@ import org.goit.cities.processor.WordFinder;
 import org.goit.cities.reader.JsonCityReader;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class CitiesGameUI {
+public class AppLauncher {
 
     public static void main(String args[]) {
 
