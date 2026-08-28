@@ -50,16 +50,28 @@ public class GameFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String enteredValue = field.getText();
-                if(StringUtils.isNotBlank(enteredValue) && END_WORD.toLowerCase().equals(enteredValue.toLowerCase()))  { showFinishDialog(GameFrame.this, false); return;}
-                if(!wordFinder.checkWord(enteredValue))
+                String trimmedWord  = enteredValue;
+                if(StringUtils.isNotBlank(enteredValue))
+                    trimmedWord  = enteredValue.trim();
+                    if(END_WORD.toLowerCase().equals(trimmedWord.toLowerCase()))
+                    {
+                        showFinishDialog(GameFrame.this, false);
+                        return;
+                    }
+
+                if(!wordFinder.checkWord(trimmedWord))
                     field.setBackground(Color.RED);
                 else{
                     field.setBackground(Color.WHITE);
-                    game.calculateStep(enteredValue);
+                    game.calculateStep(trimmedWord);
                     field.setText("");
-                    if(!game.getPlayers().get(game.getCurrentPlayerIndex()).getHuman()){
-                        String newWord = wordFinder.findNext(enteredValue);
-                        if(newWord == null){ showFinishDialog(GameFrame.this, true); return;}
+                    if(!game.getPlayers().get(game.getCurrentPlayerIndex()).isHuman()){
+                        String newWord = wordFinder.findNext(trimmedWord);
+                        if(newWord == null)
+                        {
+                            showFinishDialog(GameFrame.this, true);
+                            return;
+                        }
                         computerLabel.setText(COMPUTER_LABEL + " : " + newWord);
                         game.calculateStep(newWord);
                     }
@@ -101,11 +113,11 @@ public class GameFrame extends JFrame {
 
         StringBuffer buf = new StringBuffer();
         game.getPlayers().stream()
-                .filter(Player::getHuman)
+                .filter(Player::isHuman)
                 .forEach(player -> buf.append("Гравець зробив " + player.getCount() + " ходів "));
         StringBuffer compbuf = new StringBuffer();
         game.getPlayers().stream()
-                .filter(pl -> !pl.getHuman())
+                .filter(pl -> !pl.isHuman())
                 .forEach(player -> compbuf.append("Комп'ютер зробив " + player.getCount() + "ходів "));
 
         JLabel label1 = new JLabel("Гра завершена.");
@@ -128,8 +140,8 @@ public class GameFrame extends JFrame {
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                parent.dispose();
                 dialog.dispose();
+                parent.dispose();
             }
         });
 

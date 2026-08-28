@@ -2,27 +2,27 @@ package org.goit.cities.processor;
 
 public class Player {
 
-    private Integer count;
-    private Boolean human;
+    private int count;
+    private boolean human;
 
-    public Player(Integer count, Boolean human) {
+    public Player(int count, boolean human) {
         this.count = count;
         this.human = human;
     }
 
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
-    public Boolean getHuman() {
+    public boolean isHuman() {
         return human;
     }
 
-    public void setHuman(Boolean human) {
+    public void setHuman(boolean human) {
         this.human = human;
     }
 

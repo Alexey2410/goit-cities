@@ -23,11 +23,12 @@ public class JsonCityReader {
 
         List<City> cities = new ArrayList<>();
 
-        FileReader reader = new FileReader(jsonFile);
+        try(FileReader reader = new FileReader(jsonFile)) {
 
             cities = getCities(reader);
 
-        reader.close();
+        }
+
         return cities;
     }
 

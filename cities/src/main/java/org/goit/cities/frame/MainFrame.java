@@ -1,13 +1,14 @@
 package org.goit.cities.frame;
 
-import org.goit.cities.processor.Game;
+import com.google.gson.JsonSyntaxException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class MainFrame extends JFrame {
@@ -22,6 +23,8 @@ public class MainFrame extends JFrame {
 
     private GameFrame gameFrame;
 
+    private JButton openButton;
+
     private Supplier<GameFrame> supplier;
 
     public MainFrame(Supplier<GameFrame> supplier){
@@ -35,7 +38,7 @@ public class MainFrame extends JFrame {
 
         JLabel label = new JLabel(CHILDERN_GAME_INTITATION);
 
-        JButton openButton = new JButton(COMFIRMATION);
+        openButton = new JButton(COMFIRMATION);
         openButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -43,28 +46,38 @@ public class MainFrame extends JFrame {
                 try {
                     gameFrame.getGame().initGame();
 
-                } catch (IOException ex) {
+                } catch (IOException | JsonSyntaxException ex) {
                     showModal(MainFrame.this);
                     openButton.setEnabled(false);
                     return;
                 }
                 gameFrame.setVisible(true);
+                openButton.setEnabled(false);
 
-//                openButton.setEnabled(false);//todo enabled after close second window
+                setListenerToActivateButtonAfterGameEnded();
+
             }
         });
-//        panel.setLayout(new GridLayout(1, 2));
 
-//        JPanel topPanel = new JPanel(new BorderLayout(10, 10));
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         topPanel.add(label, BorderLayout.CENTER);
         topPanel.add(openButton, BorderLayout.EAST);
 
-//        panel.add(label);
-//        panel.add(openButton);
-
-//        add(panel);
         add(topPanel);
+    }
+
+    private void setListenerToActivateButtonAfterGameEnded() {
+        gameFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {//doesn't work
+                openButton.setEnabled(true);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                openButton.setEnabled(true);
+            }
+        });
     }
 
     private void showModal(JFrame parent) {
